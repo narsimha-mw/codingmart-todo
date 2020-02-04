@@ -1,0 +1,48 @@
+# Spring properties
+spring:
+ application:
+  name: oauth-token-client
+ datasource:
+ #Connect properties
+  url: jdbc:mysql://localhost:3306/demo?useSSL=false
+  username: root
+  password: rootpassworduser
+  driver-class-name: com.mysql.jdbc.Driver
+  testWhileIdle: true # Keep the connection alive if idle for a long time (needed in production)
+  validationQuery: SELECT 1
+ jpa:
+  hibernate:
+   ddl-auto: update
+  properties:
+   hibernate:
+    dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+ output:
+  ansi:
+   enabled: ALWAYS 
+  
+# Discovery Server Access
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:2018/eureka/ 
+    registerWithEureka: true
+    fetchRegistry: true
+    enabled: true
+  instance:
+    hostname: localhost
+    
+#Jwt user 
+jwt:
+ secret: narsimha
+# HTTP Server
+server:
+ port: 2019
+  
+  
+#logging message  
+logging:
+ level:
+  org:
+   hibernate:
+    SQL: DEBUG
+    type: TRACE
