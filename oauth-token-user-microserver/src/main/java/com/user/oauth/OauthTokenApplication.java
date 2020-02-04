@@ -9,12 +9,12 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 @SpringBootApplication
 @EnableAutoConfiguration
 @EnableEurekaClient
-public class OauthTokenUserMicroserverApplication {
+public class OauthTokenApplication {
 
 	public static void main(String[] args) {
 		// Will configure using oauth-token-client.yml
         System.setProperty("spring.config.name", "oauth-token");
-		SpringApplication.run(OauthTokenUserMicroserverApplication.class, args);
+		SpringApplication.run(OauthTokenApplication.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.user.oauth.oauthtokenusermicroserver;
+package com.user.oauth;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class OauthTokenUserMicroserverApplicationTests {
+class OauthTokenApplicationTests {
 
 	@Test
 	void contextLoads() {
