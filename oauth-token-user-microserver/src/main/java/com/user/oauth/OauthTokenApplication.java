@@ -14,6 +14,7 @@ public class OauthTokenApplication {
 	public static void main(String[] args) {
 		// Will configure using oauth-token-client.yml
         System.setProperty("spring.config.name", "oauth-token");
+        System.out.println("MNBHJBMB");
 		SpringApplication.run(OauthTokenApplication.class, args);
 	}
 
