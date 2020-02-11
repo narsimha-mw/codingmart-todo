@@ -1,0 +1,26 @@
+server:
+  port: 2015
+  
+#Zuul gateway
+zuul:
+  sensitiveHeaders: Cookie,Set-Cookie
+  routes:
+    oauth:
+      path: /oauth/** 
+      url: http://localhost:2017/oauth/token
+      serviceId: oauth-token-client
+    api:
+      path: /api/travels/**
+      url: http://localhost:2018/api/travcels/** 
+      serviceId: travel-agent-client
+      
+eureka:
+  client:
+    registerWithEureka: false
+    serviceUrl:
+      defaultZone: http://localhost:2016/eureka/
+  
+  
+spring:
+  application:
+    name: zull-gateway
