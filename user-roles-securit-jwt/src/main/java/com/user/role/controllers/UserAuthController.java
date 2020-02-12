@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
+import com.user.role.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,7 +29,6 @@ import com.user.role.payload.request.SignupRequestDTO;
 import com.user.role.payload.response.JwtResponse;
 import com.user.role.payload.response.MessageResponse;
 import com.user.role.repository.RoleRepository;
-import com.user.role.repository.UserRepository;
 import com.user.role.security.jwt.JwtUtils;
 import com.user.role.security.services.UserDetailsImpl;
 
@@ -36,11 +36,12 @@ import com.user.role.security.services.UserDetailsImpl;
 @RestController
 @RequestMapping("/api/auth/user")
 public class UserAuthController {
+
 	@Autowired
 	AuthenticationManager authenticationManager;
 
 	@Autowired
-	UserRepository userRepository;
+	UserRepository userService;
 
 	@Autowired
 	RoleRepository roleRepository;
@@ -74,13 +75,13 @@ public class UserAuthController {
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequestDTO) {
-		if (userRepository.existsByUsername(signUpRequestDTO.getUsername())) {
+		if (userService.existsByUsername(signUpRequestDTO.getUsername())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Username is already taken!"));
 		}
 
-		if (userRepository.existsByEmail(signUpRequestDTO.getEmail())) {
+		if (userService.existsByEmail(signUpRequestDTO.getEmail())) {
 			return ResponseEntity
 					.badRequest()
 					.body(new MessageResponse("Error: Email is already in agent!"));
@@ -125,7 +126,7 @@ public class UserAuthController {
 		}
 
 		user.setRoles(roles);
-		userRepository.save(user);
+		userService.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
