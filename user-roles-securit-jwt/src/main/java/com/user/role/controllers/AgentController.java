@@ -7,9 +7,11 @@ import com.user.role.repository.UserRepository;
 import com.user.role.repository.travel.AgentRepository;
 import com.user.role.security.services.agent.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
+import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -44,6 +46,8 @@ public class AgentController {
     }
     @PostMapping(value = "/add", produces = "application/json")
     public ResponseEntity<?> createNewAgent( @PathVariable Long userId, @RequestBody Agent agent) {
+//        ModelMapper modelMapper = new ModelMapper();
+
         agentService.saveAgentDetails(userId, agent);
         return ResponseEntity.ok(new MessageResponse("Agent registered successfully!"));
     }
@@ -56,8 +60,8 @@ public class AgentController {
         if (validateId.isPresent()) {
             return agentRepository.findById(agentId).map(agent -> {
                 agent.setAgentName(agentRequest.getAgentName());
-                agent.setEmail(agentRequest.getEmail());
-                agent.setAgentMobileNumber(agentRequest.getAgentMobileNumber());
+//                agent.setEmail(agentRequest.getEmail());
+//                agent.setAgentMobileNumber(agentRequest.getAgentMobileNumber());
                 return ResponseEntity.ok(agentRepository.save(agent));
             });
         }

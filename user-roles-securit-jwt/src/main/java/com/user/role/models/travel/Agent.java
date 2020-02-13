@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.user.role.models.User;
 import com.user.role.models.global.Audit;
 import lombok.Data;
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -15,8 +16,7 @@ import java.io.Serializable;
 @Entity
 @Table(name="agent", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "contact_no")
-})
+        @UniqueConstraint(columnNames = "contact_no")})
 @Data
 
 public class Agent extends Audit implements Serializable {
