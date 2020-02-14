@@ -3,8 +3,7 @@ package com.user.role.models;
 import com.user.role.models.travel.Agent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.IndexColumn;
+import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -21,8 +20,8 @@ import javax.validation.constraints.NotBlank;
 			@UniqueConstraint(columnNames = "email") 
 		})
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@DynamicUpdate
 public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,6 +54,7 @@ public class User implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="user")
 	private Set<Agent> agents;
 
+	public User(){}
 	public User(String username, String email, String password, String address, String city, Long mobileNumber) {
 		this.username = username;
 		this.email = email;

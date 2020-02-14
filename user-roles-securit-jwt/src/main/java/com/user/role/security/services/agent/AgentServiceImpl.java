@@ -1,8 +1,8 @@
 package com.user.role.security.services.agent;
 
 import com.user.role.models.travel.Agent;
+import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
-import com.user.role.repository.travel.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,9 +21,6 @@ public class AgentServiceImpl implements AgentService {
 
     @Autowired
     UserRepository userRepository;
-
-    @Autowired
-    AgentRepositoryCustomImpl agentRepositoryCustom;
 
     @PersistenceContext
     EntityManager entityManager;

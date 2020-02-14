@@ -3,6 +3,7 @@ package com.user.role.models.travel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.user.role.models.User;
 import com.user.role.models.global.Audit;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
@@ -18,7 +19,8 @@ import java.io.Serializable;
         @UniqueConstraint(columnNames = "email"),
         @UniqueConstraint(columnNames = "contact_no")})
 @Data
-
+@DynamicUpdate
+@AllArgsConstructor
 public class Agent extends Audit implements Serializable {
 
     @Id
@@ -37,14 +39,15 @@ public class Agent extends Audit implements Serializable {
     @Column(name="contact_no")
     private Long agentMobileNumber;
 
-//    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-//    @JoinColumn(referencedColumnName = "user_id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="id", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-//    @ForeignKey(name = "user_id")
     private User user;
 
+//    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="agent")
+//    private List<AgentFile> agentFiles;
+
+    public Agent() {
+    }
 }
