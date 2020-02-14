@@ -4,14 +4,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.user.role.models.travel.Agent;
 import com.user.role.payload.response.MessageResponse;
 import com.user.role.repository.UserRepository;
-import com.user.role.repository.travel.AgentRepository;
+import com.user.role.repository.travel.agent.AgentRepository;
 import com.user.role.security.services.agent.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.ResponseEntity;
-import springfox.documentation.swagger2.mappers.ModelMapper;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -32,9 +31,9 @@ public class AgentController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/msg")
-    public String message(){
-        return  "Admin access this controller";
+    @GetMapping("/hello")
+    ResponseEntity<String> hello() {
+        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
     }
 
     @GetMapping(value = "/list", produces = "application/json")
@@ -42,7 +41,7 @@ public class AgentController {
 
         List<Agent> result = agentService.allAgentDetails(userId);
 //        System.err.println( "  getAllPosts: "+ result.stream().map(agent -> agent.getEmail()));
-        return  result;
+                return  result;
     }
     @PostMapping(value = "/add", produces = "application/json")
     public ResponseEntity<?> createNewAgent( @PathVariable Long userId, @RequestBody Agent agent) {

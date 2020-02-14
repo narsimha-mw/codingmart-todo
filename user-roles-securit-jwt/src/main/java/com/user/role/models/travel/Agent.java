@@ -12,13 +12,14 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Entity
 @Table(name="agent", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
         @UniqueConstraint(columnNames = "contact_no")})
 @Data
-
+@DynamicUpdate
 public class Agent extends Audit implements Serializable {
 
     @Id
@@ -37,14 +38,15 @@ public class Agent extends Audit implements Serializable {
     @Column(name="contact_no")
     private Long agentMobileNumber;
 
-//    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-//    @JoinColumn(referencedColumnName = "user_id", nullable = false)
-//    @OnDelete(action = OnDeleteAction.CASCADE)
-//    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="id", insertable = false, updatable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
-//    @ForeignKey(name = "user_id")
     private User user;
 
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="agent")
+    private List<AgentFile> agentFiles;
+
+    public Agent() {
+    }
 }
