@@ -1,15 +1,15 @@
-# Configure this Discovery Server
-eureka: 
-  instance:
-     hostname: localhost
-  client:  
-    enabled: false      
-    fetchRegistry: false
-    registerWithEuraka: false
-
-spring:
- application:
-  name: eureka-naming-server
-  
-server:
-  port: 2018 
+## Configure this Discovery Server
+#eureka:
+#  instance:
+#     hostname: localhost
+#  client:
+#    enabled: false
+#    fetchRegistry: false
+#    registerWithEuraka: false
+#
+#spring:
+# application:
+#  name: eureka-naming-server
+#
+#server:
+#  port: 2018

@@ -45,13 +45,16 @@ public class User implements Serializable {
 
 	@Column(name="contact_no")
 	private  Long mobileNumber;
-	@ManyToMany(fetch = FetchType.LAZY)
+	@ManyToMany(targetEntity =  Role.class, fetch = FetchType.LAZY)
 	@JoinTable(	name = "users_roles",
 				joinColumns = @JoinColumn(name = "user_id"),
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="user")
+	@OneToMany(targetEntity = Agent.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY,
+			mappedBy="user", orphanRemoval = true)
+//	@JoinColumn(name="agent_fk", referencedColumnName = "id")
+
 	private Set<Agent> agents;
 
 	public User(){}
