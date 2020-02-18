@@ -53,8 +53,6 @@ public class User implements Serializable {
 
 	@OneToMany(targetEntity = Agent.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY,
 			mappedBy="user", orphanRemoval = true)
-//	@JoinColumn(name="agent_fk", referencedColumnName = "id")
-
 	private Set<Agent> agents;
 
 	public User(){}

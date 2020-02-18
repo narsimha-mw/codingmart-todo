@@ -95,9 +95,9 @@ public class UserAuthController {
 							 signUpRequestDTO.getCity(),
 							 signUpRequestDTO.getMobileNumber());
 
-		Set<String> strRoles = signUpRequestDTO.getRole();
+		Set<String> strRoles = signUpRequestDTO.getRoles();
 		Set<Role> roles = new HashSet<>();
-
+        System.out.print("set ROles: "+roles);
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -111,21 +111,22 @@ public class UserAuthController {
 					roles.add(adminRole);
 
 					break;
-				case "mod":
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
-							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
-					roles.add(modRole);
-
-					break;
-				default:
+				case "user":
 					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 					roles.add(userRole);
+
+					break;
+				default:
+					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATOR)
+							.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
+					roles.add(modRole);
 				}
 			});
 		}
 
 		user.setRoles(roles);
+		System.err.print("User roels object is: "+user);
 		userService.save(user);
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));

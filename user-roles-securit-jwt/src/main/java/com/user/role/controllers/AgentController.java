@@ -3,6 +3,7 @@ package com.user.role.controllers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.user.role.models.travel.Agent;
 import com.user.role.payload.response.MessageResponse;
+import com.user.role.payload.response.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
 import com.user.role.security.services.agent.AgentService;
@@ -38,17 +39,17 @@ public class AgentController {
 
     @GetMapping(value = "/list", produces = "application/json")
     public List<Agent> getAllPosts(@PathVariable Long userId) throws JsonProcessingException {
-
-        List<Agent> result = agentService.allAgentDetails(userId);
-//        System.err.println( "  getAllPosts: "+ result.stream().map(agent -> agent.getEmail()));
-                return  result;
+       List<Agent> result = agentService.allAgentDetails(userId);
+                return result;
     }
-    @PostMapping(value = "/add", produces = "application/json")
-    public ResponseEntity<?> createNewAgent( @PathVariable Long userId, @RequestBody Agent agent) {
-//        ModelMapper modelMapper = new ModelMapper();
 
-        agentService.saveAgentDetails(userId, agent);
-        return ResponseEntity.ok(new MessageResponse("Agent registered successfully!"));
+    @PostMapping("/add")
+    public Agent createUserAgent(@PathVariable (value = "userId") Long userId,
+                                 @Valid @RequestBody Agent agent) {
+        return  userRepository.findById(userId).map(a -> {
+            agent.setUser(a);
+            return agentRepository.save(agent);
+        }).orElseThrow(() -> new ResourceNotFoundException("UserId " + userId + " not found"));
     }
 
     @PutMapping(value = ("/{agentId}"), produces = "application/json")
@@ -59,11 +60,20 @@ public class AgentController {
         if (validateId.isPresent()) {
             return agentRepository.findById(agentId).map(agent -> {
                 agent.setAgentName(agentRequest.getAgentName());
-//                agent.setEmail(agentRequest.getEmail());
-//                agent.setAgentMobileNumber(agentRequest.getAgentMobileNumber());
+                agent.setEmail(agentRequest.getEmail());
+                agent.setAgentMobileNumber(agentRequest.getAgentMobileNumber());
                 return ResponseEntity.ok(agentRepository.save(agent));
             });
         }
         return null;
+    }
+
+    @DeleteMapping("/{agentId}")
+    public ResponseEntity<?> deleteUserAgent(@PathVariable (value = "userId") Long userId,
+                                           @PathVariable (value = "agentId") Long agentId) {
+        return agentRepository.findByIdAndUserId(agentId, userId).map(agent -> {
+            agentRepository.delete((Agent) agent);
+            return ResponseEntity.ok().build();
+        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + agentId + " and userId " + userId));
     }
 }

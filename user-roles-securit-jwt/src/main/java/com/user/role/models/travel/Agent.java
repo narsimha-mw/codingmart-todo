@@ -41,14 +41,10 @@ public class Agent extends Audit implements Serializable {
     private Long agentMobileNumber;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JoinColumn(name="agent_fk", insertable = false, updatable = false)
+    @JoinColumn(name="agent_fk", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
-
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY, mappedBy="agent", orphanRemoval = true)
-//    @JoinColumn(name="file_fk", referencedColumnName = "id")
-    private List<AgentFile> agentFiles;
 
     public Agent() {
     }
