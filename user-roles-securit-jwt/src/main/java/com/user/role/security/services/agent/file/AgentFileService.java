@@ -1,11 +1,11 @@
 package com.user.role.security.services.agent.file;
 
+import com.user.role.models.travel.AgentFile;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface AgentFileService {
 
-    boolean findByUserId(Long userId);
-    AgentFile storeFile(MultipartFile file);
+    AgentFile storeFile(MultipartFile file, Long userId, Long agentId);
 
-    AgentFile getFile(String fileId);
+    AgentFile getFile(AgentFile fileId);
 }

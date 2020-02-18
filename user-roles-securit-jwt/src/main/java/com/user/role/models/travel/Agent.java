@@ -13,6 +13,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Set;
 
 @Entity
 @Table(name="agent", uniqueConstraints = {
@@ -44,6 +45,13 @@ public class Agent extends Audit implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy = "agent", orphanRemoval = true,
+            cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+            targetEntity = AgentFile.class)
+    @JsonIgnore
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Set<AgentFile> agentFiles;
 
     public Agent() {
     }

@@ -2,7 +2,7 @@ package com.user.role.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.user.role.models.travel.Agent;
-import com.user.role.payload.response.ResourceNotFoundException;
+import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
 import com.user.role.security.services.agent.AgentService;
