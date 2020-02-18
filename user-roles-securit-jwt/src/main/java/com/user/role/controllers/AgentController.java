@@ -2,7 +2,6 @@ package com.user.role.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.user.role.models.travel.Agent;
-import com.user.role.payload.response.MessageResponse;
 import com.user.role.payload.response.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
@@ -39,8 +38,9 @@ public class AgentController {
 
     @GetMapping(value = "/list", produces = "application/json")
     public List<Agent> getAllPosts(@PathVariable Long userId) throws JsonProcessingException {
-       List<Agent> result = agentService.allAgentDetails(userId);
-                return result;
+
+        List<Agent> result = agentService.allAgentDetails(userId);
+                return  result;
     }
 
     @PostMapping("/add")

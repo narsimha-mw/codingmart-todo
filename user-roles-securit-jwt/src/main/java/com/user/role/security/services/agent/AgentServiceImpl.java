@@ -1,9 +1,6 @@
 package com.user.role.security.services.agent;
 
-import com.user.role.models.User;
 import com.user.role.models.travel.Agent;
-import com.user.role.payload.response.MessageResponse;
-import com.user.role.payload.response.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +13,6 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Function;
 
 @Service
 public class AgentServiceImpl implements AgentService {
