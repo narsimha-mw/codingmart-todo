@@ -3,6 +3,7 @@ package com.user.role.controllers;
 import com.user.role.models.travel.AgentFile;
 import com.user.role.payload.response.UploadFileResponse;
 import com.user.role.security.services.agent.file.AgentFileService;
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,9 +45,13 @@ public class AgentFileController {
         System.err.println("uploadFile Id's:"+ userId+","+ agentId);
 
         AgentFile agentFile = agentFileService.storeFile(file, userId, agentId);
+        if(agentFile instanceof AgentFile){
+            System.err.print("AgetnFIle id is: "+ agentFile.getId()+","+ agentFile.getId().getClass());
+        }
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(agentFile.getFileName())
+//                .port(agentFile.getId().toString())
                 .toUriString();
 
         String[] fileDownload=fileDownloadUri.split("downloadFile",2);
@@ -61,22 +66,21 @@ public class AgentFileController {
         System.err.print("File download path: "+ builder);
 
         return new UploadFileResponse(agentFile.getFileName(), builder.toString(),
-                file.getContentType(), file.getSize());}
+                file.getContentType(), file.getSize()/(1204*1204));}
 
     @PostMapping("/upload_multi_files")
     public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
-                //.map(file -> uploadFile(file))
                 .map(this::uploadFile)
                 .collect(Collectors.toList());
     }
 
-    @GetMapping("/downloadFile/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable AgentFile fileName) {
+    @GetMapping("/downloadFile/{fileId}")
+    public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
         // Load file from database
-        AgentFile agentFile = agentFileService.getFile(fileName);
-
-        return ResponseEntity.ok()
+        AgentFile agentFile;
+             agentFile = agentFileService.getFile(fileId);
+             return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(agentFile.getFileType()))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + agentFile.getFileName() + "\"")
                 .body(new ByteArrayResource(agentFile.getData()));

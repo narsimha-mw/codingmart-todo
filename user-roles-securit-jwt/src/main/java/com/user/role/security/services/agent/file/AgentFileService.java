@@ -7,5 +7,5 @@ public interface AgentFileService {
 
     AgentFile storeFile(MultipartFile file, Long userId, Long agentId);
 
-    AgentFile getFile(AgentFile fileId);
+    AgentFile getFile(String fileId);
 }

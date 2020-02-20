@@ -5,7 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AgentFileRepository extends JpaRepository<AgentFile, Long> {
+public interface AgentFileRepository extends JpaRepository<AgentFile, String> {
 
-    AgentFile findByFileName(AgentFile fileName);
 }

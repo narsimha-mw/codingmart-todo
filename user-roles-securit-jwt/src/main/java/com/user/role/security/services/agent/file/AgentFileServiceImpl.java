@@ -1,6 +1,8 @@
 package com.user.role.security.services.agent.file;
 
+import com.sun.org.apache.bcel.internal.generic.ARETURN;
 import com.user.role.exception.FileStorageException;
+import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.models.User;
 import com.user.role.models.travel.Agent;
 import com.user.role.models.travel.AgentFile;
@@ -54,12 +56,15 @@ public class AgentFileServiceImpl implements AgentFileService {
             return agentFileRepository.save(dbFile);
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
+        }catch (NumberFormatException n){
+            System.err.print("Id is expe");
+            return null;
         }
     }
 
     @Override
-    public AgentFile getFile(AgentFile fileName) {
-        AgentFile file=agentFileRepository.findByFileName(fileName);
-         return file;
-    }
+    public AgentFile getFile(String fileId) {
+        return  agentFileRepository.findById(fileId)
+                .orElseThrow(()->new ResourceNotFoundException("File not found with id " + fileId));
+        }
 }

@@ -4,16 +4,18 @@ import lombok.Data;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @Entity
 @Table(name = "agent_files", uniqueConstraints = {@UniqueConstraint (columnNames="fileName")})
-public class AgentFile {
-    @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String id;
+public class AgentFile implements Serializable {
 
+    @Id
+    @GenericGenerator(name = "file_id",
+            strategy = "com.user.role.models.travel.CustomeAgentFileGenerator")
+    @GeneratedValue(generator = "file_id")
+    private String id;
     private String fileName;
 
     private String fileType;
