@@ -1,5 +1,6 @@
 package com.user.role.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.user.role.models.travel.Agent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -35,6 +36,7 @@ public class User implements Serializable {
 	private String email;
 
 	@NotBlank
+	@JsonIgnore
 	private String password;
 
 	@NotBlank
@@ -53,6 +55,7 @@ public class User implements Serializable {
 
 	@OneToMany(targetEntity = Agent.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY,
 			mappedBy="user", orphanRemoval = true)
+	@JsonIgnore
 	private Set<Agent> agents;
 
 	public User(){}

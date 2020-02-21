@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <option name="USE_RELEASE_OPTION" value="false" />
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="travel-securities" />
+        <module name="travel-models" />
+        <module name="travel-controllers-swagger" />
+        <module name="travel-controllers" />
+        <module name="spring-boot-security-jwt" />
+        <module name="services-travel" />
+        <module name="travel-repositories" />
+        <module name="travel-payloads" />
+        <module name="travel-exceptions" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="travel-repository" target="1.8" />
+      <module name="travel-services" target="1.8" />
+      <module name="user-auth-token" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="services-travel" options="-parameters" />
+      <module name="spring-boot-security-jwt" options="-parameters" />
+      <module name="travel-controllers" options="-parameters" />
+      <module name="travel-controllers-swagger" options="-parameters" />
+      <module name="travel-exceptions" options="-parameters" />
+      <module name="travel-maven-module" options="-parameters" />
+      <module name="travel-models" options="-parameters" />
+      <module name="travel-payloads" options="-parameters" />
+      <module name="travel-repositories" options="-parameters" />
+      <module name="travel-repository" options="-parameters" />
+      <module name="travel-securities" options="-parameters" />
+      <module name="travel-services" options="-parameters" />
+      <module name="user-auth-token" options="-parameters" />
+    </option>
+  </component>
+</project>
