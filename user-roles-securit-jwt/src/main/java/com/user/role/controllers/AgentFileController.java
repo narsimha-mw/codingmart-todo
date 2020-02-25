@@ -2,8 +2,7 @@ package com.user.role.controllers;
 
 import com.user.role.models.travel.AgentFile;
 import com.user.role.payload.response.UploadFileResponse;
-import com.user.role.security.services.agent.file.AgentFileService;
-import org.omg.Messaging.SYNC_WITH_TRANSPORT;
+import com.user.role.services.AgentFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

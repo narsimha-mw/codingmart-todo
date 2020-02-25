@@ -1,6 +1,5 @@
 package com.user.role.controllers;
 
-import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,11 +8,12 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import com.user.role.repository.UserRepository;
+import com.user.role.security.JwtUtils;
+import com.user.role.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,9 +27,6 @@ import com.user.role.payload.request.SignupRequestDTO;
 import com.user.role.payload.response.JwtResponse;
 import com.user.role.payload.response.MessageResponse;
 import com.user.role.repository.RoleRepository;
-import com.user.role.security.jwt.JwtUtils;
-import com.user.role.security.services.UserDetailsImpl;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController

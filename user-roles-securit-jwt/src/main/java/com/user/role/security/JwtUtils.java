@@ -1,4 +1,4 @@
-package com.user.role.security.jwt;
+package com.user.role.security;
 
 import java.util.Date;
 
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
-import com.user.role.security.services.UserDetailsImpl;
+import com.user.role.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 
 /*

@@ -1,4 +1,4 @@
-package com.user.role.security.services;
+package com.user.role.services;
 
 import com.user.role.models.User;
 import com.user.role.repository.UserRepository;

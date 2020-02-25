@@ -1,4 +1,4 @@
-package com.user.role.security.services.agent;
+package com.user.role.services;
 
 import com.user.role.models.travel.Agent;
 import com.user.role.repository.AgentRepository;
