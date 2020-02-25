@@ -25,12 +25,11 @@ public class CustomeAgentFileGenerator implements IdentifierGenerator{
             {
                 int id=rs.getInt(1)+101;
                 String generatedId = prefix + id;
-                System.err.print(generatedId);
                 generatedId.trim();
                 return generatedId;
             }
         }catch (NumberFormatException n) {
-        System.err.print("JBJBJBMNBNMBNM NM NM NM NM M++++++++++++++++++++++++++");
+            n.getMessage();
         }
         catch (SQLException e) {
             // TODO Auto-generated catch block

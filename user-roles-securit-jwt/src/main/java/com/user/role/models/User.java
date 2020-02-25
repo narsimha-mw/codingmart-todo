@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.user.role.models.travel.Agent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
 
 import java.io.Serializable;
@@ -23,6 +24,7 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @DynamicUpdate
+@ToString
 public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

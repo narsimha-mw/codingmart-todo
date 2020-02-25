@@ -11,6 +11,9 @@ import org.springframework.stereotype.Component;
 import com.user.role.security.services.UserDetailsImpl;
 import io.jsonwebtoken.*;
 
+/*
+   Generate JWT token
+ */
 @Component
 public class JwtUtils {
 	private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
@@ -24,9 +27,6 @@ public class JwtUtils {
 	public String generateJwtToken(Authentication authentication) {
 
 		UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
-//      System.err.println("System: "+ System.currentTimeMillis()+",new Date() "+ new Date(System.currentTimeMillis()));
-//      System.err.println("new ()new**: "+new Date(new Date().getTime()));
-//		System.err.println("JWT TOKEN ()new**: "+new Date(new Date().getTime()+jwtExpirationMs));
 		return Jwts.builder()
 				.setSubject((userPrincipal.getUsername()))
 				.setIssuedAt(new Date())
@@ -38,6 +38,7 @@ public class JwtUtils {
 	public String getUserNameFromJwtToken(String token) {
 		return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
 	}
+
 
 	public boolean validateJwtToken(String authToken) {
 		try {
@@ -54,7 +55,6 @@ public class JwtUtils {
 		} catch (IllegalArgumentException e) {
 			logger.error("JWT claims string is empty: {}", e.getMessage());
 		}
-
 		return false;
 	}
 }

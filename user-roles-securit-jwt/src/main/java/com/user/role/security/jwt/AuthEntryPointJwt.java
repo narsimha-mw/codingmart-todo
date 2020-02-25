@@ -17,6 +17,7 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
 	private static final Logger logger = LoggerFactory.getLogger(AuthEntryPointJwt.class);
 
+	// If user is not valid/ request not valid
 	@Override
 	public void commence(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException authException) throws IOException, ServletException {

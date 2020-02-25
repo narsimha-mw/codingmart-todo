@@ -31,22 +31,13 @@ public class AgentFileController {
     @Autowired
     AgentFileService agentFileService;
 
-
-    @GetMapping("/file")
-    public String message() {
-
-        logger.debug("calling");
-        return "file controller";
-    }
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         Long userId=5L;
         Long agentId = 4L;
-        System.err.println("uploadFile Id's:"+ userId+","+ agentId);
 
         AgentFile agentFile = agentFileService.storeFile(file, userId, agentId);
         if(agentFile instanceof AgentFile){
-            System.err.print("AgetnFIle id is: "+ agentFile.getId()+","+ agentFile.getId().getClass());
         }
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
@@ -63,7 +54,6 @@ public class AgentFileController {
                 .append(agentId)
                 .append("/downloadFile")
                 .append(fileDownload[1]);
-        System.err.print("File download path: "+ builder);
 
         return new UploadFileResponse(agentFile.getFileName(), builder.toString(),
                 file.getContentType(), file.getSize()/(1204*1204));}

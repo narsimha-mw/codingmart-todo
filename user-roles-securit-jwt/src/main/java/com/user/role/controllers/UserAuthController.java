@@ -33,7 +33,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth/user")
+@RequestMapping("/api")
 public class UserAuthController {
 
 	@Autowired
@@ -51,38 +51,34 @@ public class UserAuthController {
 	@Autowired
 	JwtUtils jwtUtils;
 
-
-	@Autowired
-	UserRepository userRepository;
-
-	@GetMapping(value = "/list", produces = "application/json")
-	public List<User> getAllusers(){
-		List<User> users = userRepository.findAll();
-		return users;
-	}
-
-	@PostMapping("/signin")
+	@PostMapping("/auth/user/signin")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequestDTO loginRequestDTO) {
 
+
+		//accepting client user username & pwd
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword()));
-
 		SecurityContextHolder.getContext().setAuthentication(authentication);
+		// response jwt string
 		String jwt = jwtUtils.generateJwtToken(authentication);
-		
+		// get all user information in db
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+		// calling roles pojo and specific user roles are getting
 		List<String> roles = userDetails.getAuthorities().stream()
 				.map(item -> item.getAuthority())
 				.collect(Collectors.toList());
-
-		return ResponseEntity.ok(new JwtResponse(jwt, 
+		// in user JSON response are show in browser
+		return ResponseEntity.ok(new JwtResponse(jwt,
 												 userDetails.getId(), 
 												 userDetails.getUsername(), 
-												 userDetails.getEmail(), 
+												 userDetails.getEmail(),
+												 userDetails.getAddress(),
+												 userDetails.getMobileNumber(),
+												 userDetails.getCity(),
 												 roles));
 	}
 
-	@PostMapping("/signup")
+	@PostMapping("/auth/user/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequestDTO) {
 		if (userService.existsByUsername(signUpRequestDTO.getUsername())) {
 			return ResponseEntity
@@ -106,7 +102,15 @@ public class UserAuthController {
 
 		Set<String> strRoles = signUpRequestDTO.getRoles();
 		Set<Role> roles = new HashSet<>();
-        System.out.print("set ROles: "+roles);
+		userActionsCases(strRoles, roles);
+
+		user.setRoles(roles);
+		userService.save(user);
+
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+	}
+
+	private void userActionsCases(Set<String> strRoles, Set<Role> roles) {
 		if (strRoles == null) {
 			Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
@@ -133,11 +137,5 @@ public class UserAuthController {
 				}
 			});
 		}
-
-		user.setRoles(roles);
-		System.err.print("User roels object is: "+user);
-		userService.save(user);
-
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 }

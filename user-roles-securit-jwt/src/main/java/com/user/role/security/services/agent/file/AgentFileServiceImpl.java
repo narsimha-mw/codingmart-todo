@@ -57,7 +57,6 @@ public class AgentFileServiceImpl implements AgentFileService {
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }catch (NumberFormatException n){
-            System.err.print("Id is expe");
             return null;
         }
     }

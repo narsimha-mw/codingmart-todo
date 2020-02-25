@@ -23,11 +23,12 @@ import com.user.role.security.services.UserDetailsServiceImpl;
 @EnableGlobalMethodSecurity( prePostEnabled = true)
 
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
 
 	@Autowired
-	private AuthEntryPointJwt unauthorizedHandler;
+	AuthEntryPointJwt unauthorizedHandler;
 
 	@Bean
 	public AuthTokenFilter authenticationJwtTokenFilter() {
@@ -70,12 +71,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.permitAll()
 				.antMatchers("/swagger**","/webjars/**","/v2/**","/swagger-resources/**")
 				.permitAll()
-//				.antMatchers("/api/user/agent").hasRole("ADMIN")
 				.anyRequest()
 				.authenticated()
 				.anyRequest()
 				.authenticated();
-
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 	}
 }

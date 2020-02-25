@@ -28,31 +28,11 @@ public class AgentServiceImpl implements AgentService {
     @Override
     public List<Agent> allAgentDetails(Long userId) {
 
-        System.err.println("++++++++++++++++++");
- if(entityManager instanceof  EntityManager){
-     System.err.println("Entity manager created obj");
- }
         CriteriaBuilder cBuilder=entityManager.getCriteriaBuilder();
-        //System.err.println("cBuilder"+ cBuilder);
         CriteriaQuery<Agent> agentQuery = cBuilder.createQuery(Agent.class);
-       // System.err.println("agentQuery"+ agentQuery);
         Root<Agent> rootQuery = agentQuery.from(Agent.class);
-        //System.err.println("rootQuery"+ rootQuery);
         agentQuery.select(rootQuery);
-        List<Agent> result = entityManager.createQuery(agentQuery).getResultList();
-        for (Agent a:result) {
-            System.err.println("Agent email is: "+ a.getEmail());
-        }
-
-        if(result instanceof  Agent){
-            System.err.println("**(*(*(*(*"+((Agent) result).getEmail());
-        }else if(result==null){
-            System.err.println("Is not get result in null agent");
-        }
-        else{
-            System.err.println("Is not get result in agetn object");
-        }
-//        result.forEach(System.err::println);
+       // List<Agent> result = entityManager.createQuery(agentQuery).getResultList();
 
         if(implementerId(userId)){
             return agentRepository.findAll();

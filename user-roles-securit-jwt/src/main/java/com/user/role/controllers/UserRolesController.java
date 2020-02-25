@@ -13,9 +13,16 @@ import java.util.List;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/user/")
+@RequestMapping("/api/user/roles")
 public class UserRolesController {
 
+
+	@Autowired
+	UserRepository userRepository;
+	@GetMapping("/")
+	public  List<User> getAllUserRoles() {
+		return userRepository.findAll();
+	}
 	@GetMapping("/roles/user")
 	@PreAuthorize("hasRole('USER') or hasRole('MODERATOR') or hasRole('ADMIN')")
 	public String agentUserAccess() {

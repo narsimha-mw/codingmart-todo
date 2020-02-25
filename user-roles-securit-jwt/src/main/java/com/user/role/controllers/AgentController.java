@@ -31,14 +31,8 @@ public class AgentController {
     @Autowired
     UserRepository userRepository;
 
-    @GetMapping("/hello")
-    ResponseEntity<String> hello() {
-        return new ResponseEntity<>("Hello World!", HttpStatus.OK);
-    }
-
     @GetMapping(value = "/list", produces = "application/json")
     public List<Agent> getAllPosts(@PathVariable Long userId) throws JsonProcessingException {
-
         List<Agent> result = agentService.allAgentDetails(userId);
                 return  result;
     }
