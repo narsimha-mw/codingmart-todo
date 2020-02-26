@@ -5,6 +5,7 @@ import com.user.role.models.travel.Agent;
 import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
+import com.user.role.services.AgentFilterService;
 import com.user.role.services.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -30,10 +31,16 @@ public class AgentController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    AgentFilterService agentFilterService;
+
     @GetMapping(value = "/list", produces = "application/json")
     public List<Agent> getAllPosts(@PathVariable Long userId) throws JsonProcessingException {
         List<Agent> result = agentService.allAgentDetails(userId);
-                return  result;
+
+    agentFilterService.message();
+
+    return  result;
     }
 
     @PostMapping("/add")
