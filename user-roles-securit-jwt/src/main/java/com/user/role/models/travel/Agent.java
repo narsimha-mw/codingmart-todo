@@ -5,11 +5,12 @@ import com.user.role.models.User;
 import com.user.role.models.global.Audit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
@@ -36,7 +37,7 @@ public class Agent extends Audit implements Serializable {
 
     @Email
     private String email;
-
+    private  String address;
     @Column(name="contact_no")
     private Long agentMobileNumber;
 
@@ -46,11 +47,8 @@ public class Agent extends Audit implements Serializable {
     @JsonIgnore
     private User user;
 
-    @OneToMany(mappedBy = "agent", orphanRemoval = true,
-            cascade = CascadeType.ALL, fetch = FetchType.LAZY,
-            targetEntity = AgentFile.class)
+    @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
-    @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<AgentFile> agentFiles;
 
     public Agent() {

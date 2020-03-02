@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -55,9 +57,9 @@ public class User implements Serializable {
 				inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
 
-	@OneToMany(targetEntity = Agent.class, cascade = CascadeType.ALL,fetch = FetchType.LAZY,
-			mappedBy="user", orphanRemoval = true)
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
 	@JsonIgnore
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Set<Agent> agents;
 
 	public User(){}

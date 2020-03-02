@@ -1,8 +1,10 @@
 package com.user.role.controllers;
 
+import com.user.role.models.travel.Agent;
 import com.user.role.models.travel.AgentFile;
 import com.user.role.payload.response.UploadFileResponse;
-import com.user.role.services.AgentFileService;
+import com.user.role.repository.AgentRepository;
+import com.user.role.services.service.AgentFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,39 +31,33 @@ public class AgentFileController {
     private static final Logger logger = LoggerFactory.getLogger(AgentFileController.class);
 
     @Autowired
-    AgentFileService agentFileService;
+    private  AgentFileService agentFileService;
+    @Autowired
+    private AgentRepository agentRepository;
 
     @PostMapping("/uploadFile")
-    public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
-        Long userId=5L;
-        Long agentId = 4L;
-
+    public UploadFileResponse uploadFile(@PathVariable(value = "userId") Long userId,
+                                         @PathVariable(value = "agentId") Long agentId,
+                                         @RequestParam("file") MultipartFile file) {
         AgentFile agentFile = agentFileService.storeFile(file, userId, agentId);
-        if(agentFile instanceof AgentFile){
-        }
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(agentFile.getFileName())
-//                .port(agentFile.getId().toString())
                 .toUriString();
 
         String[] fileDownload=fileDownloadUri.split("downloadFile",2);
-        StringBuilder builder=new StringBuilder();
-        builder.append(fileDownload[0])
-                .append("api/user/")
-                .append(userId)
-                .append("/agent/")
-                .append(agentId)
-                .append("/downloadFile")
-                .append(fileDownload[1]);
-
-        return new UploadFileResponse(agentFile.getFileName(), builder.toString(),
-                file.getContentType(), file.getSize()/(1204*1204));}
+        String customDownloadURL = fileDownload[0] + "api/user/" + userId + "/agent/"
+                                   +agentId +"/downloadFile" + fileDownload[1];
+        return new UploadFileResponse(agentFile.getFileName(), customDownloadURL,
+                file.getContentType(), Long.toString(file.getSize()/1024));
+    }
 
     @PostMapping("/upload_multi_files")
-    public List<UploadFileResponse> uploadMultipleFiles(@RequestParam("files") MultipartFile[] files) {
+    public List<UploadFileResponse> uploadMultipleFiles(@PathVariable(value = "userId") Long userId,
+                                                        @PathVariable(value = "agentId") Long agentId,
+                                                        @RequestParam("files") MultipartFile[] files) {
         return Arrays.stream(files)
-                .map(this::uploadFile)
+                .map(file -> uploadFile(userId, agentId, file))
                 .collect(Collectors.toList());
     }
 
@@ -74,4 +71,17 @@ public class AgentFileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + agentFile.getFileName() + "\"")
                 .body(new ByteArrayResource(agentFile.getData()));
     }
+
+
+    @DeleteMapping("/file/{fileId}")
+    public ResponseEntity<?> deleteUserAgent(@PathVariable (value = "agentId") Long agentId,
+                                             @PathVariable (value = "fileId") String fileId) {
+        Optional<Object> deletedAgentId = agentRepository.findById(agentId).map(Agent::getId);
+
+        if(deletedAgentId.isPresent()) {
+            agentFileService.deleteAgentFile(fileId);
+            return ResponseEntity.ok("Deletd file");
+        }
+        return null;
+}
 }

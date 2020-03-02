@@ -1,11 +1,11 @@
 package com.user.role.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.user.role.models.User;
 import com.user.role.models.travel.Agent;
 import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
-import com.user.role.services.AgentFilterService;
+import com.user.role.services.serviceImpl.AgentFilterService;
 import com.user.role.services.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +19,7 @@ import java.util.Optional;
 @RestController
 @CrossOrigin(origins = "*",allowedHeaders="*")
 @RequestMapping("/api/user/{userId}/agent")
-@PreAuthorize("hasRole('ADMIN')")
+@PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
 public class AgentController {
 
     @Autowired
@@ -31,14 +31,12 @@ public class AgentController {
     @Autowired
     UserRepository userRepository;
 
-    @Autowired
-    AgentFilterService agentFilterService;
+//    @Autowired
+//    AgentFilterService agentFilterService;
 
     @GetMapping(value = "/list", produces = "application/json")
-    public List<Agent> getAllPosts(@PathVariable Long userId) throws JsonProcessingException {
+    public List<Agent> getAllPosts(@PathVariable Long userId)  {
         List<Agent> result = agentService.allAgentDetails(userId);
-
-    agentFilterService.message();
 
     return  result;
     }
@@ -56,24 +54,30 @@ public class AgentController {
     public Optional<ResponseEntity<Agent>> updateAgentDetails(@PathVariable(value = "userId") Long userId,
                                                               @PathVariable(value = "agentId") Long agentId,
                                                               @Valid @RequestBody Agent agentRequest) {
-        Optional<Long> validateId = userRepository.findById(userId).map(user -> user.getId());
+        Optional<Long> validateId = userRepository.findById(userId).map(User::getId);
         if (validateId.isPresent()) {
             return agentRepository.findById(agentId).map(agent -> {
                 agent.setAgentName(agentRequest.getAgentName());
                 agent.setEmail(agentRequest.getEmail());
+                agent.setAddress(agentRequest.getAddress());
                 agent.setAgentMobileNumber(agentRequest.getAgentMobileNumber());
                 return ResponseEntity.ok(agentRepository.save(agent));
             });
         }
-        return null;
+        return Optional.empty();
     }
 
     @DeleteMapping("/{agentId}")
     public ResponseEntity<?> deleteUserAgent(@PathVariable (value = "userId") Long userId,
                                            @PathVariable (value = "agentId") Long agentId) {
-        return agentRepository.findByIdAndUserId(agentId, userId).map(agent -> {
-            agentRepository.delete((Agent) agent);
+        boolean validUserId = ValidUserId(userId);
+        if(validUserId) {
+               agentRepository.deleteById(agentId);
+           }
             return ResponseEntity.ok().build();
-        }).orElseThrow(() -> new ResourceNotFoundException("Comment not found with id " + agentId + " and userId " + userId));
     }
+    private boolean ValidUserId(@PathVariable("userId") Long userId) {
+        return userRepository.findById(userId).map(User::getId).isPresent();
+    }
+
 }

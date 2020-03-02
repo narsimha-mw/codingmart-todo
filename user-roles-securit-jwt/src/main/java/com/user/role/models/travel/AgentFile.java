@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 @Data
 @Entity
-@Table(name = "agent_files", uniqueConstraints = {@UniqueConstraint (columnNames="fileName")})
+@Table(name = "agent_files")
 public class AgentFile implements Serializable {
 
     @Id
@@ -23,7 +23,8 @@ public class AgentFile implements Serializable {
     @Lob
     private byte[] data;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "agent_file_fk",nullable = true)
     private Agent agent;
 

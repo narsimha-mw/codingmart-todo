@@ -1,4 +1,4 @@
-package com.user.role.services;
+package com.user.role.services.serviceImpl;
 
 import com.user.role.exception.FileStorageException;
 import com.user.role.exception.ResourceNotFoundException;
@@ -8,6 +8,7 @@ import com.user.role.models.travel.AgentFile;
 import com.user.role.repository.AgentFileRepository;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
+import com.user.role.services.service.AgentFileService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -65,4 +66,9 @@ public class AgentFileServiceImpl implements AgentFileService {
         return  agentFileRepository.findById(fileId)
                 .orElseThrow(()->new ResourceNotFoundException("File not found with id " + fileId));
         }
+
+    @Override
+    public void deleteAgentFile(String fileId) {
+         agentFileRepository.deleteById(fileId);
+    }
 }
