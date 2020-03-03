@@ -5,7 +5,6 @@ import com.user.role.models.travel.Agent;
 import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
-import com.user.role.services.serviceImpl.AgentFilterService;
 import com.user.role.services.AgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,22 +22,41 @@ import java.util.Optional;
 public class AgentController {
 
     @Autowired
-    AgentService agentService;
+    private AgentService agentService;
 
     @Autowired
-    AgentRepository agentRepository;
+    private AgentRepository agentRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private  UserRepository userRepository;
 
 //    @Autowired
-//    AgentFilterService agentFilterService;
+//    private ModelMapper modelMapper;
+
+    public AgentController(UserRepository userRepository, AgentService agentService, AgentRepository agentRepository) {
+        this.userRepository=userRepository;
+        this.agentService = agentService;
+        this.agentRepository = agentRepository;
+//        this.modelMapper = modelMapper;
+    }
+
+    @GetMapping(path = "/address={agentAddress}")
+public List<Agent> getAgents(
+//        @PathVariable(value = "agentName") String agentName,
+                     @PathVariable(value = "agentAddress") String agentAddress) {
+    // code here
+    List<Agent> response = agentService.getAgentNameAndEmail(agentAddress);
+    System.err.print("response "+ response);
+    return response;
+}
 
     @GetMapping(value = "/list", produces = "application/json")
     public List<Agent> getAllPosts(@PathVariable Long userId)  {
-        List<Agent> result = agentService.allAgentDetails(userId);
-
-    return  result;
+        boolean validUserId = ValidUserId(userId);
+        if(validUserId) {
+            return agentService.allAgentDetails();
+                }
+    return null;
     }
 
     @PostMapping("/add")
@@ -76,6 +94,7 @@ public class AgentController {
            }
             return ResponseEntity.ok().build();
     }
+
     private boolean ValidUserId(@PathVariable("userId") Long userId) {
         return userRepository.findById(userId).map(User::getId).isPresent();
     }

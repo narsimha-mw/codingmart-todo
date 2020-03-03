@@ -5,6 +5,7 @@ import com.user.role.models.travel.Agent;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -27,6 +28,7 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 @DynamicUpdate
 @ToString
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class User implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,6 +53,7 @@ public class User implements Serializable {
 
 	@Column(name="contact_no")
 	private  Long mobileNumber;
+
 	@ManyToMany(targetEntity =  Role.class, fetch = FetchType.LAZY)
 	@JoinTable(	name = "users_roles",
 				joinColumns = @JoinColumn(name = "user_id"),

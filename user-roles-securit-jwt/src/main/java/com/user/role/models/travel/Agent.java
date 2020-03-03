@@ -6,6 +6,8 @@ import com.user.role.models.global.Audit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.hibernate.annotations.*;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 import javax.persistence.*;
 import javax.persistence.CascadeType;
@@ -16,13 +18,18 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
+@Data
+@DynamicUpdate
+@AllArgsConstructor
 @Entity
 @Table(name="agent", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
         @UniqueConstraint(columnNames = "contact_no")})
-@Data
-@DynamicUpdate
-@AllArgsConstructor
+
+@NamedQueries({
+        @NamedQuery(name = "getAllDetails",
+                query = "select a from Agent a where a.agentName=?1 OR a.address=?2")
+})
 public class Agent extends Audit implements Serializable {
 
     @Id
