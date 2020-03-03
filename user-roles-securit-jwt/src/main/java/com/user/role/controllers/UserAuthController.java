@@ -1,6 +1,6 @@
 package com.user.role.controllers;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -19,6 +19,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,32 +75,21 @@ public class UserAuthController {
 		UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 		// calling roles pojo and specific user roles are getting
 		List<String> roles = userDetails.getAuthorities().stream()
-				.map(GrantedAuthority::getAuthority)
-				.collect(Collectors.toList());
+				.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		// in user JSON response are show in browser
-		return ResponseEntity.ok(new JwtResponse(jwt,
-												 userDetails.getId(), 
-												 userDetails.getUsername(), 
-												 userDetails.getEmail(),
-												 userDetails.getAddress(),
-												 userDetails.getMobileNumber(),
-												 userDetails.getCity(),
-												 roles));
+		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
+				userDetails.getEmail(),	userDetails.getAddress(), userDetails.getMobileNumber(),
+				userDetails.getCity(), roles));
 	}
 
 	@PostMapping("/auth/user/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequestDTO signUpRequestDTO) {
-		if (userRepository.existsByUsername(signUpRequestDTO.getUsername())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Username is already taken!"));
-		}
 
-		if (userRepository.existsByEmail(signUpRequestDTO.getEmail())) {
-			return ResponseEntity
-					.badRequest()
-					.body(new MessageResponse("Error: Email is already in agent!"));
-		}
+		if (userRepository.existsByUsername(signUpRequestDTO.getUsername()))
+			return getResponseMessage("Error: Username is already in agent!");
+
+		if (userRepository.existsByEmail(signUpRequestDTO.getEmail()))
+			return getResponseMessage("Error: Email is already in agent!");
 
 		// Create new user's account
 		User user = new User(signUpRequestDTO.getUsername(),
@@ -112,14 +103,15 @@ public class UserAuthController {
 	                        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
+
 	@GetMapping("/user/{userId}")
-	public ResponseEntity<List<User>> getByUserId(@PathVariable(value = "userId") Long userId){
+	public ResponseEntity getByUserId(@PathVariable(value = "userId") Long userId){
 		return new ResponseEntity(userRepository.findById(userId), HttpStatus.OK);
 	}
+
 	@PutMapping("/user/update/{userId}")
 	public ResponseEntity updateUser(@PathVariable(value = "userId") Long userId,
 						   @RequestBody SignupRequestDTO users){
-		System.err.print(userId+ " ***************: "+users);
 		userRepository.findById(userId).map(user->{
 			user.setUsername(users.getUsername());
 			user.setEmail(users.getEmail());
@@ -130,7 +122,38 @@ public class UserAuthController {
 		});
 		return ResponseEntity.ok(new MessageResponse("User Updated successfully!"));
 	}
+@PostMapping("/user/forgot_pwd")
+public void forgotPwd(@RequestParam("email") String email,
+					  @RequestParam("password") String password,
+					  @RequestParam("confirm_pwd") String confirm_pwd){
+	Boolean response = userRepository.existsByEmail(email);
+	if(response){
+		if(password.endsWith(confirm_pwd)){
+			List<User> user = userRepository.findByEmail(email);
+			List<User> userName = new ArrayList<>(user);
+			for(User u:userName){
+				u.setPassword(pwdConvert(password));
+				userRepository.save(u);
+			};
+		}else{
+			System.err.print("pwd doesn't match");
+		}
+	}else{
+		System.err.print("email doesn't exists");
+	}
+}
 
+// pwd was encrypted..
+private String pwdConvert(String password){
+		return new BCryptPasswordEncoder().encode(password);
+}
+// response message display
+	private ResponseEntity<MessageResponse> getResponseMessage(String message) {
+		return ResponseEntity
+				.badRequest()
+				.body(new MessageResponse(message));
+	}
+	// dynamically user role added into set Role in User entity
 	private void userActionsCases(Set<String> strRoles, User user) {
 		Set<Role> roles = new HashSet<>();
 		if (strRoles == null) {
@@ -138,25 +161,25 @@ public class UserAuthController {
 					.orElseThrow(() -> new RuntimeException("Error: Role is not found."));
 			roles.add(userRole);
 		} else {
-			strRoles.forEach(role -> {
+			for (String role : strRoles) {
 				switch (role) {
-				case "admin":
-					Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
-							.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
-					roles.add(adminRole);
-					break;
-				case "user":
-					System.err.print(ERole.ROLE_USER);
-					Role userRole = roleRepository.findByName(ERole.ROLE_USER)
-							.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
-					roles.add(userRole);
-					break;
-				default:
-					Role modRole = roleRepository.findByName(ERole.ROLE_MODERATE)
-							.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
-					roles.add(modRole);
+					case "admin":
+						Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
+								.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
+						roles.add(adminRole);
+						break;
+					case "user":
+						System.err.print(ERole.ROLE_USER);
+						Role userRole = roleRepository.findByName(ERole.ROLE_USER)
+								.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
+						roles.add(userRole);
+						break;
+					default:
+						Role modRole = roleRepository.findByName(ERole.ROLE_MODERATE)
+								.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
+						roles.add(modRole);
 				}
-			});
+			}
 		}
 		user.setRoles(roles);
 		userRepository.save(user);
