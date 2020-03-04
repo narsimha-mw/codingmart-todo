@@ -2,8 +2,8 @@ package com.user.role.services.service;
 
 import javax.mail.MessagingException;
 
-public interface UserMailServer {
+public interface TravelUserMailServer {
     void placeOrder(Integer otpCode);
-    void sendEmailWithAttachment() throws MessagingException;
+    void sendEmailWithHTML(Integer otpCode) throws MessagingException;
 
 }

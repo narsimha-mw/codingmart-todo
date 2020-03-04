@@ -1,13 +1,8 @@
 package com.user.role.controllers;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
-
 import javax.validation.Valid;
-
 import com.user.role.repository.UserRepository;
 import com.user.role.security.JwtUtils;
 import com.user.role.services.UserDetailsImpl;
@@ -19,8 +14,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -78,7 +71,7 @@ public class UserAuthController {
 				.map(GrantedAuthority::getAuthority).collect(Collectors.toList());
 		// in user JSON response are show in browser
 		return ResponseEntity.ok(new JwtResponse(jwt, userDetails.getId(), userDetails.getUsername(),
-				userDetails.getEmail(),	userDetails.getAddress(), userDetails.getMobileNumber(),
+				userDetails.getEmail(), userDetails.getAddress(), userDetails.getMobileNumber(),
 				userDetails.getCity(), roles));
 	}
 
@@ -93,60 +86,38 @@ public class UserAuthController {
 
 		// Create new user's account
 		User user = new User(signUpRequestDTO.getUsername(),
-							 signUpRequestDTO.getEmail(),
-							 encoder.encode(signUpRequestDTO.getPassword()),
-				             signUpRequestDTO.getAddress(),
-							 signUpRequestDTO.getCity(),
-							 signUpRequestDTO.getMobileNumber()
-		                    );
-							 userActionsCases(signUpRequestDTO.getRoles(), user);
-	                        return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+				signUpRequestDTO.getEmail(),
+				encoder.encode(signUpRequestDTO.getPassword()),
+				signUpRequestDTO.getAddress(),
+				signUpRequestDTO.getCity(),
+				signUpRequestDTO.getMobileNumber()
+		);
+		userActionsCases(signUpRequestDTO.getRoles(), user);
+		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
 
-
 	@GetMapping("/user/{userId}")
-	public ResponseEntity getByUserId(@PathVariable(value = "userId") Long userId){
+	public ResponseEntity getByUserId(@PathVariable(value = "userId") Long userId) {
 		return new ResponseEntity(userRepository.findById(userId), HttpStatus.OK);
 	}
 
 	@PutMapping("/user/update/{userId}")
 	public ResponseEntity updateUser(@PathVariable(value = "userId") Long userId,
-						   @RequestBody SignupRequestDTO users){
-		userRepository.findById(userId).map(user->{
+									 @RequestBody SignupRequestDTO users) {
+		userRepository.findById(userId).map(user -> {
 			user.setUsername(users.getUsername());
 			user.setEmail(users.getEmail());
 			user.setMobileNumber(user.getMobileNumber());
 			user.setAddress(users.getAddress());
-			userActionsCases(users.getRoles(), user);
+			if(users.getRoles()==null){
+				userRepository.save(user);
+			}else {
+				userActionsCases(users.getRoles(), user);
+			}
 			return ResponseEntity.ok(new MessageResponse("User Updated in successfully!"));
 		});
 		return ResponseEntity.ok(new MessageResponse("User Updated successfully!"));
 	}
-@PostMapping("/user/forgot_pwd")
-public void forgotPwd(@RequestParam("email") String email,
-					  @RequestParam("password") String password,
-					  @RequestParam("confirm_pwd") String confirm_pwd){
-	Boolean response = userRepository.existsByEmail(email);
-	if(response){
-		if(password.endsWith(confirm_pwd)){
-			List<User> user = userRepository.findByEmail(email);
-			List<User> userName = new ArrayList<>(user);
-			for(User u:userName){
-				u.setPassword(pwdConvert(password));
-				userRepository.save(u);
-			};
-		}else{
-			System.err.print("pwd doesn't match");
-		}
-	}else{
-		System.err.print("email doesn't exists");
-	}
-}
-
-// pwd was encrypted..
-private String pwdConvert(String password){
-		return new BCryptPasswordEncoder().encode(password);
-}
 // response message display
 	private ResponseEntity<MessageResponse> getResponseMessage(String message) {
 		return ResponseEntity
