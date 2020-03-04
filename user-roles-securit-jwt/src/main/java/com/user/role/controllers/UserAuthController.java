@@ -98,7 +98,12 @@ public class UserAuthController {
 
 	@GetMapping("/user/{userId}")
 	public ResponseEntity<?> getByUserId(@PathVariable(value = "userId") Long userId) {
-		return new ResponseEntity<>(userRepository.findById(userId), HttpStatus.OK);
+		if(userId!=null) {
+			userRepository.findById(userId);
+			}else{
+			return ResponseEntity.ok(new MessageResponse("user id is not found"));
+		}
+		return ResponseEntity.ok(new MessageResponse("user details successfully updated"));
 	}
 
 	@PutMapping("/user/update/{userId}")

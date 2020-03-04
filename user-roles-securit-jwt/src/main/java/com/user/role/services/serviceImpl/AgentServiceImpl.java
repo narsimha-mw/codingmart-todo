@@ -23,6 +23,6 @@ public class AgentServiceImpl implements AgentService {
 
     @Override
     public List<Agent> getAgentNameAndEmail( String address) {
-        return agentFilterService.getAgentNameAndEmail(address);
+        return (List<Agent>) agentFilterService.getAgentNameAndEmail(address);
     }
 }

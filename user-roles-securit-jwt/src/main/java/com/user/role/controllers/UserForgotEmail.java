@@ -1,4 +1,6 @@
 package com.user.role.controllers;
+import com.user.role.exception.ApiError;
+import com.user.role.payload.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import com.user.role.models.User;
@@ -44,12 +46,12 @@ private String userEmail=null;
                        userRepository.save(u);
                    }
                } else {
-                   return new ResponseEntity<>("you enter invalid password credentials, please try valid once.",HttpStatus.NOT_ACCEPTABLE);
+                   return ResponseEntity.ok(new ApiError("you enter invalid password credentials, please try valid once.",HttpStatus.NOT_ACCEPTABLE));
                }
            }else{
-               return new ResponseEntity<>("you enter invalid verification code, please try valid once..",HttpStatus.NOT_ACCEPTABLE);
+               return ResponseEntity.ok(new ApiError("you enter invalid verification code, please try valid once..",HttpStatus.NOT_ACCEPTABLE));
            }
-        return new ResponseEntity<>("Your Password was updated successfully",HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(new MessageResponse("Your Password was updated successfully",HttpStatus.ACCEPTED));
     }
     @GetMapping("/user/verify_email")
     public ResponseEntity<?> sendMail(@RequestParam("email") String email)  {
@@ -62,12 +64,14 @@ private String userEmail=null;
                // travelUserMailServer.placeOrder(this.otp_code);
                 travelUserMailServer.sendEmailWithHTML(this.otp_code);
             } catch (Exception ex) {
-                ex.printStackTrace();
+                return new ResponseEntity<>(null,null,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }else{
-            return new ResponseEntity<>("Your email doesn't exists",HttpStatus.ACCEPTED);
+//            return (ResponseEntity<?>) ResponseEntity.badRequest();
+            return ResponseEntity.ok(new ApiError("Email doesn't exists",HttpStatus.NOT_ACCEPTABLE));
+            //badRequest("Your email doesn't exists"));
         }
-        return new ResponseEntity<>("Verification code send to your registered mail, Please check with inbox/spam folder",HttpStatus.ACCEPTED);
+        return ResponseEntity.ok(new MessageResponse("Verification code send to your registered mail, Please check with inbox/spam folder",HttpStatus.ACCEPTED));
     }
 
     // this will convert any number sequence into 6 character.

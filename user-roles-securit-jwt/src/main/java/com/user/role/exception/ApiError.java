@@ -8,17 +8,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class ApiError {
 
-    private HttpStatus status;
     private String message;
-    private List<String> errors;
+    private HttpStatus status;
 
-    public ApiError(HttpStatus status, String message, String error) {
+    public ApiError(String message,HttpStatus status) {
         super();
         this.status = status;
         this.message = message;
-        errors = Arrays.asList(error);
+    }
+    public ApiError( String message) {
+        super();
+        this.message = message;
     }
 }
