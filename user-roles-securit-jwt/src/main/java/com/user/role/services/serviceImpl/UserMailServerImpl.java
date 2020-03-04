@@ -21,7 +21,6 @@ public class UserMailServerImpl implements TravelUserMailServer {
     // normal text
     @Override
     public void placeOrder(Integer otpCode) {
-        System.err.print("sendmailOTPCode:  "+ otpCode);
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setTo("narasimhulu@codingmart.com");
         msg.setSubject("Reset your Travel password request");

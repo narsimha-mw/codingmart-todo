@@ -46,7 +46,6 @@ public List<Agent> getAgents(
                      @PathVariable(value = "agentAddress") String agentAddress) {
     // code here
     List<Agent> response = agentService.getAgentNameAndEmail(agentAddress);
-    System.err.print("response "+ response);
     return response;
 }
 

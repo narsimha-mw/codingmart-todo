@@ -3,6 +3,8 @@ package com.user.role.services.serviceImpl;
 import com.user.role.models.travel.Agent;
 import com.user.role.repository.AgentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
@@ -30,28 +32,26 @@ public class AgentFilterService {
         this.agentRepository = agentRepository;
     }
 
-    public List<Agent> getAgentNameAndEmail( String address) {
+    public ResponseEntity<List<Agent>> getAgentNameAndEmail( String address) {
 
         if (entityManager.isOpen()) {
 //            List<Agent> employees = entityManager.createQuery("from Agent ", Agent.class).getResultList();
 //            List<String> result = employees.stream().map(agent -> agent.getAgentName()).collect(Collectors.toList());
 //            for (String a:result) {
-//                System.err.println("GEt But All querys: "+ a);
+//            return new ResponseEntity<>("you enter invalid password credentials, please try valid once.", HttpStatus.NOT_ACCEPTABLE);
+
 //            }
 //            List<Agent> files = entityManager.createQuery("select a from Agent a join a.agentFiles f where a.agentName = 'abcd' and f.fileName = 'two.png'", Agent.class).getResultList();
-//            for (Agent a:files) {
-//                System.err.print("GEt But All : "+ a.getAgentFiles());
-//            }
 //            TypedQuery<Agent> query = entityManager.createQuery("getAllDetails", Agent.class);
             TypedQuery<Agent> query = entityManager.createQuery("from Agent ", Agent.class);
 //            query.setParameter(1, agentName);
 //            List<Agent> result=query.getResultList().stream().collect(Collectors.toList());
 //            List<Agent> result = query.setParameter(1, address).getResultList().stream().collect(Collectors.toList());
             ArrayList<Agent> result = new ArrayList<>(query.setParameter(1, address).getResultList());
-            System.err.print("result: "+ result);
-            return result;
+
+            return new ResponseEntity(result, HttpStatus.OK);
         }
-        return null;
+        return new ResponseEntity("INVALID EMIALS ",HttpStatus.BAD_REQUEST );
     }
 
     public List<Agent> allAgentDetails() {

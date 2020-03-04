@@ -97,12 +97,12 @@ public class UserAuthController {
 	}
 
 	@GetMapping("/user/{userId}")
-	public ResponseEntity getByUserId(@PathVariable(value = "userId") Long userId) {
-		return new ResponseEntity(userRepository.findById(userId), HttpStatus.OK);
+	public ResponseEntity<?> getByUserId(@PathVariable(value = "userId") Long userId) {
+		return new ResponseEntity<>(userRepository.findById(userId), HttpStatus.OK);
 	}
 
 	@PutMapping("/user/update/{userId}")
-	public ResponseEntity updateUser(@PathVariable(value = "userId") Long userId,
+	public ResponseEntity<?> updateUser(@PathVariable(value = "userId") Long userId,
 									 @RequestBody SignupRequestDTO users) {
 		userRepository.findById(userId).map(user -> {
 			user.setUsername(users.getUsername());
@@ -140,7 +140,6 @@ public class UserAuthController {
 						roles.add(adminRole);
 						break;
 					case "user":
-						System.err.print(ERole.ROLE_USER);
 						Role userRole = roleRepository.findByName(ERole.ROLE_USER)
 								.orElseThrow(() -> new RuntimeException("Error: Specific user role is not found."));
 						roles.add(userRole);
