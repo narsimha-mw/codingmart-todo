@@ -1,8 +1,8 @@
 package com.user.role.controllers;
 
+import com.user.role.exception.RecordNotFoundException;
 import com.user.role.models.User;
 import com.user.role.models.travel.Agent;
-import com.user.role.exception.ResourceNotFoundException;
 import com.user.role.repository.AgentRepository;
 import com.user.role.repository.UserRepository;
 import com.user.role.services.AgentService;
@@ -64,7 +64,7 @@ public List<Agent> getAgents(
         return  userRepository.findById(userId).map(a -> {
             agent.setUser(a);
             return agentRepository.save(agent);
-        }).orElseThrow(() -> new ResourceNotFoundException("UserId " + userId + " not found"));
+        }).orElseThrow(() -> new RecordNotFoundException("UserId " + userId + " not found"));
     }
 
     @PutMapping(value = ("/{agentId}"), produces = "application/json")

@@ -1,7 +1,7 @@
 package com.user.role.services.serviceImpl;
 
 import com.user.role.exception.FileStorageException;
-import com.user.role.exception.ResourceNotFoundException;
+import com.user.role.exception.RecordNotFoundException;
 import com.user.role.models.User;
 import com.user.role.models.travel.Agent;
 import com.user.role.models.travel.AgentFile;
@@ -64,7 +64,7 @@ public class AgentFileServiceImpl implements AgentFileService {
     @Override
     public AgentFile getFile(String fileId) {
         return  agentFileRepository.findById(fileId)
-                .orElseThrow(()->new ResourceNotFoundException("File not found with id " + fileId));
+                .orElseThrow(()->new RecordNotFoundException("File not found with id " + fileId));
         }
 
     @Override

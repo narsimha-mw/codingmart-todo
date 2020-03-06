@@ -1,5 +1,5 @@
 package com.user.role.controllers;
-import com.user.role.exception.ApiError;
+import com.user.role.exception.RestApiError;
 import com.user.role.payload.response.MessageResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -46,10 +46,10 @@ private String userEmail=null;
                        userRepository.save(u);
                    }
                } else {
-                   return ResponseEntity.ok(new ApiError("you enter invalid password credentials, please try valid once.",HttpStatus.NOT_ACCEPTABLE));
+                   return ResponseEntity.ok(new RestApiError("you enter invalid password credentials, please try valid once.",HttpStatus.NOT_ACCEPTABLE));
                }
            }else{
-               return ResponseEntity.ok(new ApiError("you enter invalid verification code, please try valid once..",HttpStatus.NOT_ACCEPTABLE));
+               return ResponseEntity.ok(new RestApiError("you enter invalid verification code, please try valid once..",HttpStatus.NOT_ACCEPTABLE));
            }
         return ResponseEntity.ok(new MessageResponse("Your Password was updated successfully",HttpStatus.ACCEPTED));
     }
@@ -67,9 +67,7 @@ private String userEmail=null;
                 return new ResponseEntity<>(null,null,HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }else{
-//            return (ResponseEntity<?>) ResponseEntity.badRequest();
-            return ResponseEntity.ok(new ApiError("Email doesn't exists",HttpStatus.NOT_ACCEPTABLE));
-            //badRequest("Your email doesn't exists"));
+            return ResponseEntity.ok(new RestApiError("Email doesn't exists",HttpStatus.NOT_ACCEPTABLE));
         }
         return ResponseEntity.ok(new MessageResponse("Verification code send to your registered mail, Please check with inbox/spam folder",HttpStatus.ACCEPTED));
     }

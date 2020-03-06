@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
-@Data
+//@Data
 @DynamicUpdate
 @AllArgsConstructor
 @Entity
@@ -50,14 +50,91 @@ public class Agent extends Audit implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="agent_fk", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private User user;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getAgentName() {
+        return agentName;
+    }
+
+    public void setAgentName(String agentName) {
+        this.agentName = agentName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public Long getAgentMobileNumber() {
+        return agentMobileNumber;
+    }
+
+    public void setAgentMobileNumber(Long agentMobileNumber) {
+        this.agentMobileNumber = agentMobileNumber;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Set<AgentFile> getAgentFiles() {
+        return agentFiles;
+    }
+
+    public void setAgentFiles(Set<AgentFile> agentFiles) {
+        this.agentFiles = agentFiles;
+    }
 
     @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnore
     private Set<AgentFile> agentFiles;
 
     public Agent() {
+    }
+
+    @Override
+    public String toString() {
+        return "Agent{" +
+                "id=" + id +
+                ", agentName='" + agentName + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", agentMobileNumber=" + agentMobileNumber +
+                ", user=" + user +
+                ", agentFiles=" + agentFiles +
+                '}';
     }
 }

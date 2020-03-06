@@ -3,11 +3,11 @@ package com.user.role.controllers;
 import java.util.*;
 import java.util.stream.Collectors;
 import javax.validation.Valid;
+
 import com.user.role.repository.UserRepository;
 import com.user.role.security.JwtUtils;
 import com.user.role.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -29,7 +29,7 @@ import com.user.role.repository.RoleRepository;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
-public class UserAuthController {
+public class TokenAuthController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
@@ -46,8 +46,10 @@ public class UserAuthController {
 	@Autowired
 	private JwtUtils jwtUtils;
 
-	public UserAuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
-							  RoleRepository roleRepository, PasswordEncoder encoder, JwtUtils jwtUtils) {
+
+	public TokenAuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
+							   RoleRepository roleRepository,
+							   PasswordEncoder encoder, JwtUtils jwtUtils) {
 		this.authenticationManager = authenticationManager;
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
@@ -94,34 +96,6 @@ public class UserAuthController {
 		);
 		userActionsCases(signUpRequestDTO.getRoles(), user);
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
-	}
-
-	@GetMapping("/user/{userId}")
-	public ResponseEntity<?> getByUserId(@PathVariable(value = "userId") Long userId) {
-		if(userId!=null) {
-			userRepository.findById(userId);
-			}else{
-			return ResponseEntity.ok(new MessageResponse("user id is not found"));
-		}
-		return ResponseEntity.ok(new MessageResponse("user details successfully updated"));
-	}
-
-	@PutMapping("/user/update/{userId}")
-	public ResponseEntity<?> updateUser(@PathVariable(value = "userId") Long userId,
-									 @RequestBody SignupRequestDTO users) {
-		userRepository.findById(userId).map(user -> {
-			user.setUsername(users.getUsername());
-			user.setEmail(users.getEmail());
-			user.setMobileNumber(user.getMobileNumber());
-			user.setAddress(users.getAddress());
-			if(users.getRoles()==null){
-				userRepository.save(user);
-			}else {
-				userActionsCases(users.getRoles(), user);
-			}
-			return ResponseEntity.ok(new MessageResponse("User Updated in successfully!"));
-		});
-		return ResponseEntity.ok(new MessageResponse("User Updated successfully!"));
 	}
 // response message display
 	private ResponseEntity<MessageResponse> getResponseMessage(String message) {
