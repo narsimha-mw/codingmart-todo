@@ -46,7 +46,6 @@ public class TokenAuthController {
 	@Autowired
 	private JwtUtils jwtUtils;
 
-
 	public TokenAuthController(AuthenticationManager authenticationManager, UserRepository userRepository,
 							   RoleRepository roleRepository,
 							   PasswordEncoder encoder, JwtUtils jwtUtils) {

@@ -1,7 +1,5 @@
 package com.user.role.controllers;
 
-import com.user.role.exception.ErrorResponse;
-import com.user.role.exception.RestApiError;
 import com.user.role.models.ERole;
 import com.user.role.models.Role;
 import com.user.role.models.User;

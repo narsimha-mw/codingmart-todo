@@ -26,7 +26,7 @@ public class RestApiError extends Throwable {
         this.status = status;
     }
 
-    RestApiError(HttpStatus status, Throwable ex) {
+    public RestApiError(HttpStatus status, Throwable ex) {
         this();
         this.status = status;
         this.message = "Unexpected error";
@@ -38,7 +38,7 @@ public class RestApiError extends Throwable {
         this.message=message;
         this.status=status;
     }
-    RestApiError(HttpStatus status, String message, Throwable ex) {
+    public RestApiError(HttpStatus status, String message, Throwable ex) {
         this();
         this.status = status;
         this.message = message;
