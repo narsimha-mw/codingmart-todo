@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface TravelsAgentService {
 
-    List<TravelsAgent> allAgentDetails();
+    List<TravelsAgent> allAgentDetails(Long userId);
     List<TravelsAgent> getAgentNameAndEmail(String address);
 }

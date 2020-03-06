@@ -1,5 +1,6 @@
 package com.user.role.controllers;
 
+import com.user.role.exception.MissingHeaderInfoException;
 import com.user.role.exception.RecordNotFoundException;
 import com.user.role.models.User;
 import com.user.role.models.travel.TravelsAgent;
@@ -47,7 +48,7 @@ public List<TravelsAgent> getAgents(@PathVariable(value = "agentAddress") String
     public List<TravelsAgent> getAllPosts(@PathVariable Long userId)  {
         boolean validUserId = ValidUserId(userId);
         if(validUserId) {
-            return agentService.allAgentDetails();
+            return agentService.allAgentDetails(userId);
                 }
     return null;
     }
@@ -81,11 +82,12 @@ public List<TravelsAgent> getAgents(@PathVariable(value = "agentAddress") String
     @DeleteMapping("/{agentId}")
     public ResponseEntity<?> deleteUserAgent(@PathVariable (value = "userId") Long userId,
                                            @PathVariable (value = "agentId") Long agentId) {
-        boolean validUserId = ValidUserId(userId);
-        if(validUserId) {
-               agentRepository.deleteById(agentId);
-           }
-            return ResponseEntity.ok().build();
+
+        return  agentRepository.findByIdAndUserId(agentId,userId).map(agent->{
+                    agentRepository.delete(agent);
+                    return ResponseEntity.ok().build();
+
+        }).orElseThrow(()->new MissingHeaderInfoException("Error"));
     }
 
     private boolean ValidUserId(@PathVariable("userId") Long userId) {

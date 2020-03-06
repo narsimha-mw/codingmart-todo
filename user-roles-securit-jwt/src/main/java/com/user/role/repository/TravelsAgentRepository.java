@@ -12,9 +12,6 @@ import java.util.Optional;
 @Repository
 public interface TravelsAgentRepository extends JpaRepository<TravelsAgent, Long> {
 
-    Optional<Object> findByIdAndUserId(Long agentId, Long userId);
-
-    List<TravelsAgentDTO> findByAgentName(String name);
-
-//    boolean findUserIdByAgentId(Long agentId, Long userId);
+    Optional<TravelsAgent> findByIdAndUserId(Long agentId, Long userId);
+    List<TravelsAgent> findByUserId(Long userId);
 }

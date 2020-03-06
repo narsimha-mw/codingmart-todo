@@ -17,8 +17,8 @@ public class TravelsAgentServiceImpl implements TravelsAgentService {
     }
 
     @Override
-    public List<TravelsAgent> allAgentDetails() {
-        return agentFilterService.allAgentDetails();
+    public List<TravelsAgent> allAgentDetails(Long userId) {
+        return agentFilterService.allAgentDetails(userId);
     }
 
     @Override

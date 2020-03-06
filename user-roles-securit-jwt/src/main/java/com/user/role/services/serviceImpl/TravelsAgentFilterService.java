@@ -54,12 +54,12 @@ public class TravelsAgentFilterService {
         return new ResponseEntity("INVALID EMIALS ",HttpStatus.BAD_REQUEST );
     }
 
-    public List<TravelsAgent> allAgentDetails() {
-
-        CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TravelsAgent> agentQuery = cBuilder.createQuery(TravelsAgent.class);
-        Root<TravelsAgent> rootQuery = agentQuery.from(TravelsAgent.class);
-        agentQuery.select(rootQuery);
-        return agentRepository.findAll();
+    public List<TravelsAgent> allAgentDetails(Long userId) {
+//
+//        CriteriaBuilder cBuilder = entityManager.getCriteriaBuilder();
+//        CriteriaQuery<TravelsAgent> agentQuery = cBuilder.createQuery(TravelsAgent.class);
+//        Root<TravelsAgent> rootQuery = agentQuery.from(TravelsAgent.class);
+//        agentQuery.select(rootQuery);
+        return agentRepository.findByUserId(userId);
     }
 }
