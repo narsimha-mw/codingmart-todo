@@ -34,7 +34,6 @@ public class TravelsAgent extends Audit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
-
     private String agentName;
     @Email
     private String email;
@@ -108,22 +107,22 @@ public class TravelsAgent extends Audit implements Serializable {
         this.user = user;
     }
 
-    public Set<TravelsAgentFile> getAgentFiles() {
-        return agentFiles;
-    }
+//    public Set<TravelsAgentFile> getAgentFiles() {
+//        return agentFiles;
+//    }
 
-    public void setAgentFiles(Set<TravelsAgentFile> agentFiles) {
-        this.agentFiles = agentFiles;
-    }
+//    public void setAgentFiles(Set<TravelsAgentFile> agentFiles) {
+//        this.agentFiles = agentFiles;
+//    }
 
 
-    public Set<DriverInfo> getDriverInfo() {
-        return driverInfo;
-    }
-
-    public void setDriverInfo(Set<DriverInfo> driverInfo) {
-        this.driverInfo = driverInfo;
-    }
+//    public Set<DriverInfo> getDriverInfo() {
+//        return driverInfo;
+//    }
+//
+//    public void setDriverInfo(Set<DriverInfo> driverInfo) {
+//        this.driverInfo = driverInfo;
+//    }
 
     @Override
     public String toString() {

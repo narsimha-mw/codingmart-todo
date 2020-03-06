@@ -30,20 +30,14 @@ public class TravelsAgentController {
     @Autowired
     private  UserRepository userRepository;
 
-//    @Autowired
-//    private ModelMapper modelMapper;
-
     public TravelsAgentController(UserRepository userRepository, TravelsAgentService agentService, TravelsAgentRepository agentRepository) {
         this.userRepository=userRepository;
         this.agentService = agentService;
         this.agentRepository = agentRepository;
-//        this.modelMapper = modelMapper;
     }
 
     @GetMapping(path = "/address={agentAddress}")
-public List<TravelsAgent> getAgents(
-//        @PathVariable(value = "agentName") String agentName,
-                     @PathVariable(value = "agentAddress") String agentAddress) {
+public List<TravelsAgent> getAgents(@PathVariable(value = "agentAddress") String agentAddress) {
     // code here
     List<TravelsAgent> response = agentService.getAgentNameAndEmail(agentAddress);
     return response;
@@ -97,5 +91,4 @@ public List<TravelsAgent> getAgents(
     private boolean ValidUserId(@PathVariable("userId") Long userId) {
         return userRepository.findById(userId).map(User::getId).isPresent();
     }
-
 }

@@ -5,6 +5,10 @@ spring:
      username: root
      password: rootpassworduser
    jpa:
+     hibernate:
+       naming:
+         implicit-strategy: org.hibernate.boot.model.naming.ImplicitNamingStrategyLegacyJpaImpl
+         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
      properties:
        hibernate:
          jdbc:

@@ -24,7 +24,6 @@ public class DriverInfoController {
 
 //    @GetMapping(path = "/address={agentAddress}")
 //    public List<TravelsAgent> getAgents(
-////        @PathVariable(value = "agentName") String agentName,
 //                     @PathVariable(value = "agentAddress") String agentAddress) {
 //    // code here
 //    List<TravelsAgent> response = agentService.getAgentNameAndEmail(agentAddress);
