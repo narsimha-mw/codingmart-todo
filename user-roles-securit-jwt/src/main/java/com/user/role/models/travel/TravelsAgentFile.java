@@ -9,7 +9,7 @@ import java.io.Serializable;
 @Data
 @Entity
 @Table(name = "agent_files")
-public class AgentFile implements Serializable {
+public class TravelsAgentFile implements Serializable {
 
     @Id
     @GenericGenerator(name = "file_id",
@@ -26,12 +26,12 @@ public class AgentFile implements Serializable {
 //    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @ManyToOne
     @JoinColumn(name = "agent_file_fk",nullable = true)
-    private Agent agent;
+    private TravelsAgent agent;
 
-    public AgentFile() {
+    public TravelsAgentFile() {
     }
 
-    public AgentFile(String fileName, String fileType, byte[] data) {
+    public TravelsAgentFile(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
         this.fileType = fileType;
         this.data = data;

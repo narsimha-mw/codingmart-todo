@@ -7,14 +7,14 @@ import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
-public class AgentDTO implements Serializable {
+public class TravelsAgentDTO implements Serializable {
 
     private Long id;
     private String agentName;
     private String email;
     private String address;
 
-//    public AgentDTO(Long id, String agentName, String email, String address) {
+//    public TravelsAgentDTO(Long id, String agentName, String email, String address) {
 //        this.id = id;
 //        this.agentName = agentName;
 //        this.email = email;

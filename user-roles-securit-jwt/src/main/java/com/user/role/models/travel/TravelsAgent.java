@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.user.role.models.User;
 import com.user.role.models.global.Audit;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.NamedQueries;
 import org.hibernate.annotations.NamedQuery;
@@ -14,7 +13,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -28,30 +27,38 @@ import java.util.Set;
 
 @NamedQueries({
         @NamedQuery(name = "getAllDetails",
-                query = "select a from Agent a where a.agentName=?1 OR a.address=?2")
+                query = "select a from TravelsAgent a where a.agentName=?1 OR a.address=?2")
 })
-public class Agent extends Audit implements Serializable {
+public class TravelsAgent extends Audit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private  Long id;
 
-    @Column(name="username")
     private String agentName;
-
-    @Size(min = 4, max = 8)
-    private String password;
-
     @Email
     private String email;
     private  String address;
     @Column(name="contact_no")
-    private Long agentMobileNumber;
+    @Pattern(regexp="(^$|[0-9]{10})")
+    private String agentMobileNumber;
 
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JoinColumn(name="agent_fk", nullable = false)
     @JsonIgnore
     private User user;
+
+    @OneToMany(mappedBy="agent", cascade = CascadeType.ALL, fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    @JsonIgnore
+    private Set<DriverInfo> driverInfo;
+
+    @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private Set<TravelsAgentFile> agentFiles;
+
+    public TravelsAgent() {
+    }
 
     public Long getId() {
         return id;
@@ -67,14 +74,6 @@ public class Agent extends Audit implements Serializable {
 
     public void setAgentName(String agentName) {
         this.agentName = agentName;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getEmail() {
@@ -93,11 +92,11 @@ public class Agent extends Audit implements Serializable {
         this.address = address;
     }
 
-    public Long getAgentMobileNumber() {
+    public String getAgentMobileNumber() {
         return agentMobileNumber;
     }
 
-    public void setAgentMobileNumber(Long agentMobileNumber) {
+    public void setAgentMobileNumber(String agentMobileNumber) {
         this.agentMobileNumber = agentMobileNumber;
     }
 
@@ -109,32 +108,34 @@ public class Agent extends Audit implements Serializable {
         this.user = user;
     }
 
-    public Set<AgentFile> getAgentFiles() {
+    public Set<TravelsAgentFile> getAgentFiles() {
         return agentFiles;
     }
 
-    public void setAgentFiles(Set<AgentFile> agentFiles) {
+    public void setAgentFiles(Set<TravelsAgentFile> agentFiles) {
         this.agentFiles = agentFiles;
     }
 
-    @OneToMany(mappedBy = "agent", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnore
-    private Set<AgentFile> agentFiles;
 
-    public Agent() {
+    public Set<DriverInfo> getDriverInfo() {
+        return driverInfo;
+    }
+
+    public void setDriverInfo(Set<DriverInfo> driverInfo) {
+        this.driverInfo = driverInfo;
     }
 
     @Override
     public String toString() {
-        return "Agent{" +
+        return "TravelsAgent{" +
                 "id=" + id +
                 ", agentName='" + agentName + '\'' +
-                ", password='" + password + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
                 ", agentMobileNumber=" + agentMobileNumber +
                 ", user=" + user +
                 ", agentFiles=" + agentFiles +
+                "' driverInfo="+ driverInfo+
                 '}';
     }
 }

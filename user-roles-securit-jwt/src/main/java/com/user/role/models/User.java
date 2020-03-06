@@ -1,14 +1,8 @@
 package com.user.role.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.user.role.models.travel.Agent;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.ToString;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.user.role.models.travel.TravelsAgent;
 import org.hibernate.annotations.DynamicUpdate;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -63,7 +57,7 @@ public class User implements Serializable {
 	@OneToMany(mappedBy="user", cascade = CascadeType.ALL, fetch = FetchType.LAZY,
 			orphanRemoval = true)
 	@JsonIgnore
-	private Set<Agent> agents;
+	private Set<TravelsAgent> agents;
 
 	public User(){}
 	public User(String username, String email, String password, String address, String city, Long mobileNumber) {
@@ -139,11 +133,11 @@ public class User implements Serializable {
 		this.roles = roles;
 	}
 
-	public Set<Agent> getAgents() {
+	public Set<TravelsAgent> getAgents() {
 		return agents;
 	}
 
-	public void setAgents(Set<Agent> agents) {
+	public void setAgents(Set<TravelsAgent> agents) {
 		this.agents = agents;
 	}
 

@@ -2,10 +2,10 @@ package com.user.role.controllers;
 
 import com.user.role.exception.RecordNotFoundException;
 import com.user.role.models.User;
-import com.user.role.models.travel.Agent;
-import com.user.role.repository.AgentRepository;
+import com.user.role.models.travel.TravelsAgent;
+import com.user.role.repository.TravelsAgentRepository;
 import com.user.role.repository.UserRepository;
-import com.user.role.services.AgentService;
+import com.user.role.services.TravelsAgentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +19,13 @@ import java.util.Optional;
 @CrossOrigin(origins = "*",allowedHeaders="*")
 @RequestMapping("/api/user/{userId}/agent")
 @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
-public class AgentController {
+public class TravelsAgentController {
 
     @Autowired
-    private AgentService agentService;
+    private TravelsAgentService agentService;
 
     @Autowired
-    private AgentRepository agentRepository;
+    private TravelsAgentRepository agentRepository;
 
     @Autowired
     private  UserRepository userRepository;
@@ -33,7 +33,7 @@ public class AgentController {
 //    @Autowired
 //    private ModelMapper modelMapper;
 
-    public AgentController(UserRepository userRepository, AgentService agentService, AgentRepository agentRepository) {
+    public TravelsAgentController(UserRepository userRepository, TravelsAgentService agentService, TravelsAgentRepository agentRepository) {
         this.userRepository=userRepository;
         this.agentService = agentService;
         this.agentRepository = agentRepository;
@@ -41,16 +41,16 @@ public class AgentController {
     }
 
     @GetMapping(path = "/address={agentAddress}")
-public List<Agent> getAgents(
+public List<TravelsAgent> getAgents(
 //        @PathVariable(value = "agentName") String agentName,
                      @PathVariable(value = "agentAddress") String agentAddress) {
     // code here
-    List<Agent> response = agentService.getAgentNameAndEmail(agentAddress);
+    List<TravelsAgent> response = agentService.getAgentNameAndEmail(agentAddress);
     return response;
 }
 
     @GetMapping(value = "/list", produces = "application/json")
-    public List<Agent> getAllPosts(@PathVariable Long userId)  {
+    public List<TravelsAgent> getAllPosts(@PathVariable Long userId)  {
         boolean validUserId = ValidUserId(userId);
         if(validUserId) {
             return agentService.allAgentDetails();
@@ -59,8 +59,8 @@ public List<Agent> getAgents(
     }
 
     @PostMapping("/add")
-    public Agent createUserAgent(@PathVariable (value = "userId") Long userId,
-                                 @Valid @RequestBody Agent agent) {
+    public TravelsAgent createUserAgent(@PathVariable (value = "userId") Long userId,
+                                        @Valid @RequestBody TravelsAgent agent) {
         return  userRepository.findById(userId).map(a -> {
             agent.setUser(a);
             return agentRepository.save(agent);
@@ -68,9 +68,9 @@ public List<Agent> getAgents(
     }
 
     @PutMapping(value = ("/{agentId}"), produces = "application/json")
-    public Optional<ResponseEntity<Agent>> updateAgentDetails(@PathVariable(value = "userId") Long userId,
-                                                              @PathVariable(value = "agentId") Long agentId,
-                                                              @Valid @RequestBody Agent agentRequest) {
+    public Optional<ResponseEntity<TravelsAgent>> updateAgentDetails(@PathVariable(value = "userId") Long userId,
+                                                                     @PathVariable(value = "agentId") Long agentId,
+                                                                     @Valid @RequestBody TravelsAgent agentRequest) {
         Optional<Long> validateId = userRepository.findById(userId).map(User::getId);
         if (validateId.isPresent()) {
             return agentRepository.findById(agentId).map(agent -> {

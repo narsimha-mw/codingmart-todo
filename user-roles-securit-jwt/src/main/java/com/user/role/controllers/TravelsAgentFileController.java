@@ -1,10 +1,10 @@
 package com.user.role.controllers;
 
-import com.user.role.models.travel.Agent;
-import com.user.role.models.travel.AgentFile;
+import com.user.role.models.travel.TravelsAgent;
+import com.user.role.models.travel.TravelsAgentFile;
 import com.user.role.payload.response.UploadFileResponse;
-import com.user.role.repository.AgentRepository;
-import com.user.role.services.service.AgentFileService;
+import com.user.role.repository.TravelsAgentRepository;
+import com.user.role.services.service.TravelsAgentFileService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,20 +26,20 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("api/user/{userId}/agent/{agentId}")
 @PreAuthorize("hasRole('ADMIN')")
-public class AgentFileController {
+public class TravelsAgentFileController {
 
-    private static final Logger logger = LoggerFactory.getLogger(AgentFileController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TravelsAgentFileController.class);
 
     @Autowired
-    private  AgentFileService agentFileService;
+    private TravelsAgentFileService agentFileService;
     @Autowired
-    private AgentRepository agentRepository;
+    private TravelsAgentRepository agentRepository;
 
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@PathVariable(value = "userId") Long userId,
                                          @PathVariable(value = "agentId") Long agentId,
                                          @RequestParam("file") MultipartFile file) {
-        AgentFile agentFile = agentFileService.storeFile(file, userId, agentId);
+        TravelsAgentFile agentFile = agentFileService.storeFile(file, userId, agentId);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(agentFile.getFileName())
@@ -64,7 +64,7 @@ public class AgentFileController {
     @GetMapping("/downloadFile/{fileId}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileId) {
         // Load file from database
-        AgentFile agentFile;
+        TravelsAgentFile agentFile;
              agentFile = agentFileService.getFile(fileId);
              return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(agentFile.getFileType()))
@@ -76,7 +76,7 @@ public class AgentFileController {
     @DeleteMapping("/file/{fileId}")
     public ResponseEntity<?> deleteUserAgent(@PathVariable (value = "agentId") Long agentId,
                                              @PathVariable (value = "fileId") String fileId) {
-        Optional<Object> deletedAgentId = agentRepository.findById(agentId).map(Agent::getId);
+        Optional<Object> deletedAgentId = agentRepository.findById(agentId).map(TravelsAgent::getId);
 
         if(deletedAgentId.isPresent()) {
             agentFileService.deleteAgentFile(fileId);
